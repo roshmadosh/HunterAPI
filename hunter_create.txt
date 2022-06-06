@@ -1,0 +1,74 @@
+-- PostgreSQL create script
+
+CREATE TABLE IF NOT EXISTS Industry (
+	industry_name VARCHAR(20) PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS Company (
+	company_id SERIAL PRIMARY KEY,
+	industry_name VARCHAR(20) REFERENCES Industry (industry_name),
+	company_name VARCHAR(30) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS AppUser (
+	username VARCHAR(30) PRIMARY KEY,
+	company_id SERIAL REFERENCES Company (company_id),
+	email VARCHAR(254) UNIQUE NOT NULL,
+	password VARCHAR(30) NOT NULL,
+	first_name VARCHAR(30) NOT NULL,
+	last_name VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS DegreeLevel  (
+	degree_level VARCHAR(10) primary key
+);
+
+CREATE TABLE IF NOT EXISTS Education (
+	degree_name VARCHAR(30) UNIQUE NOT NULL,
+	school_name VARCHAR(30)  UNIQUE NOT NULL,
+	degree_level VARCHAR(10) REFERENCES DegreeLevel (degree_level),
+	PRIMARY KEY(degree_name, school_name)
+);
+
+CREATE TABLE IF NOT EXISTS HunterHasEducation (
+	hunter_education_id serial	PRIMARY KEY,
+	username VARCHAR(30) REFERENCES AppUser (username) NOT NULL,
+	degree_name VARCHAR(30) REFERENCES Education (degree_name) UNIQUE NOT NULL,
+	school_name VARCHAR(30) REFERENCES Education (school_name) UNIQUE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Skill (
+	skill_id serial PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS AltSkillName (
+	alt_skill_name VARCHAR(30) NOT NULL,
+	skill_id serial REFERENCES Skill (skill_id) 
+);
+
+CREATE TABLE IF NOT EXISTS HunterHasSkill (
+	username VARCHAR(30) REFERENCES AppUser(username),
+	skill_id serial REFERENCES Skill(skill_id),
+	years_of_exp integer CHECK (years_of_exp >= 0),
+	primary key(username, skill_id)
+);
+
+CREATE TABLE IF NOT EXISTS Job (
+	job_id serial primary key,
+	company_id serial references Company(company_id),
+	degree_level varchar(10) references DegreeLevel(degree_level),
+	job_title varchar(30) not null,
+	job_description varchar(1000),
+	created_at timestamp default CURRENT_TIMESTAMP,
+	available boolean default true 
+);
+
+CREATE TABLE IF NOT EXISTS JobRequiresSkill (
+	skill_id serial references Skill(skill_id),
+	job_id serial references Job(job_id)
+);
+
+CREATE TABLE IF NOT EXISTS JobApplication (
+	username varchar(30) references AppUser(username),
+	job_id serial references Job(job_id),
+	created_at timestamp default CURRENT_TIMESTAMP
+);
