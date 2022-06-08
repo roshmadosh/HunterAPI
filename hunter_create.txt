@@ -1,17 +1,19 @@
 -- PostgreSQL create script
 
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE IF NOT EXISTS Industry (
 	industry_name VARCHAR(20) PRIMARY KEY
 );
 
 CREATE TABLE IF NOT EXISTS Company (
-	company_id SERIAL PRIMARY KEY,
+	company_id uuid PRIMARY KEY DEFAULT uuid_generate_v4 (),
 	industry_name VARCHAR(20) REFERENCES Industry (industry_name),
 	company_name VARCHAR(30) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS AppUser (
 	username VARCHAR(30) PRIMARY KEY,
-	company_id SERIAL REFERENCES Company (company_id),
+	company_id uuid REFERENCES Company (company_id),
 	email VARCHAR(254) UNIQUE NOT NULL,
 	password VARCHAR(30) NOT NULL,
 	first_name VARCHAR(30) NOT NULL,
@@ -30,31 +32,31 @@ CREATE TABLE IF NOT EXISTS Education (
 );
 
 CREATE TABLE IF NOT EXISTS HunterHasEducation (
-	hunter_education_id serial	PRIMARY KEY,
+	hunter_education_id uuid PRIMARY KEY DEFAULT uuid_generate_v4 (),
 	username VARCHAR(30) REFERENCES AppUser (username) NOT NULL,
 	degree_name VARCHAR(30) REFERENCES Education (degree_name) UNIQUE NOT NULL,
 	school_name VARCHAR(30) REFERENCES Education (school_name) UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Skill (
-	skill_id serial PRIMARY KEY
+	skill_id uuid PRIMARY KEY DEFAULT uuid_generate_v4 ()
 );
 
 CREATE TABLE IF NOT EXISTS AltSkillName (
 	alt_skill_name VARCHAR(30) NOT NULL,
-	skill_id serial REFERENCES Skill (skill_id) 
+	skill_id uuid REFERENCES Skill (skill_id) 
 );
 
 CREATE TABLE IF NOT EXISTS HunterHasSkill (
 	username VARCHAR(30) REFERENCES AppUser(username),
-	skill_id serial REFERENCES Skill(skill_id),
+	skill_id uuid REFERENCES Skill(skill_id),
 	years_of_exp integer CHECK (years_of_exp >= 0),
 	primary key(username, skill_id)
 );
 
 CREATE TABLE IF NOT EXISTS Job (
-	job_id serial primary key,
-	company_id serial references Company(company_id),
+	job_id uuid PRIMARY KEY DEFAULT uuid_generate_v4 (),
+	company_id uuid references Company(company_id),
 	degree_level varchar(10) references DegreeLevel(degree_level),
 	job_title varchar(30) not null,
 	job_description varchar(1000),
@@ -63,12 +65,12 @@ CREATE TABLE IF NOT EXISTS Job (
 );
 
 CREATE TABLE IF NOT EXISTS JobRequiresSkill (
-	skill_id serial references Skill(skill_id),
-	job_id serial references Job(job_id)
+	skill_id uuid references Skill(skill_id),
+	job_id uuid references Job(job_id)
 );
 
 CREATE TABLE IF NOT EXISTS JobApplication (
 	username varchar(30) references AppUser(username),
-	job_id serial references Job(job_id),
+	job_id uuid references Job(job_id),
 	created_at timestamp default CURRENT_TIMESTAMP
 );
