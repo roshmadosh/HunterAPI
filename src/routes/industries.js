@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { runQuery } = require('./index');
+const { industryServices } = require('../services');
 
 router.get('/', async (req, res) => {
-  const resObject = await runQuery({ text: 'SELECT * FROM industry' });
+  const resObject = await industryServices.getIndustries();
 
   if (!resObject.success) {
     res.status(400).send(resObject);
@@ -13,10 +13,7 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const resObject = await runQuery({ 
-    text: 'INSERT INTO industry(industry_name) VALUES($1)',
-    values: [req.body['industry_name']]
-  });
+  const resObject = await industryService.addIndustry(req.body['industry_name']);
 
   if (!resObject.success) {
     res.status(400).send(resObject);
