@@ -1,17 +1,22 @@
-import industryDAO from '../db/industries';
+import DAO from '../db';
 
-const getIndustries = async () => {
-  return industryDAO.getIndustries();
-}
-
-const addIndustry = (industry_name: string) => {
-  // validate parameter
-  // ....
+function industryServices(database: any) {
+  const getIndustries = async () => {
+    return DAO.getIndustries();
+  }
   
-  return industryDAO.addIndustry(industry_name);
+  const addIndustry = (industry_name: string) => {
+    // validate parameter
+    // ....
+    
+    return DAO.addIndustry(industry_name);
+  }
+
+  return {
+    getIndustries,
+    addIndustry
+  }
 }
 
-export const industryServices = {
-  getIndustries,
-  addIndustry
-}
+
+export default industryServices;

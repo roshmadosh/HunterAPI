@@ -2,9 +2,14 @@ const express = require('express');
 const app = express();
 const { mountRoutes } = require('./routes');
 
-app.use(express.json());
-mountRoutes(app);
 
-app.listen(process.env.PORT, () => {
-  console.log(`Listening in ${process.env.NODE_ENV} on port ${process.env.PORT}`)
-});
+function createApp(dataAccessor: any) {
+  app.use(express.json());
+  
+  // injecting services as a dependency bc it (indirectly) provides the methods to access the database.
+  mountRoutes(app, dataAccessor);
+  
+  return app;
+}
+
+export default createApp;

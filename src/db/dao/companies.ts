@@ -1,5 +1,5 @@
-import { runQuery, ReturnObject } from './index';
-import { Company, ICompany } from '../models/company';
+import { runQuery, ReturnObject } from '../setup';
+import { Company, ICompany } from '../../models/company';
 
 const getCompanies = async (): Promise<ReturnObject<Company>> => {
   const result = await runQuery({ text: 'SELECT * FROM company' });
