@@ -40,10 +40,11 @@ const addCompany = async (company: ICompany): Promise<ReturnObject<Company>> => 
   }
 }
 
-const updateCompany = async (company_id: string, industry_name: string, company_name: string): Promise<ReturnObject<Company>> => {
+const updateCompany = async (company: ICompany): Promise<ReturnObject<Company>> => {
+  const { industry_name, company_name, company_id } = company;
   const result = await runQuery({
     text: 'UPDATE company SET industry_name = $1, company_name = $2 WHERE company_id = $3',
-    values: [industry_name, company_name, company_id]
+    values: [industry_name, company_name, company_id!] // validation occurs at the object-mapping level, i.e. company_id will always be non-null
   });
     const data = result.success ? new Company(result.data[0]) : undefined;
   return {

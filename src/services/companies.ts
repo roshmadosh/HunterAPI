@@ -20,13 +20,19 @@ const addCompany = (requestBody: any) => {
       message: err.message
     }
   }
-
 }
 
 const updateCompany = (requestObject: any) => {
-
-  // const company = new Company({ company_id, industry_name, company_name });
-  // return companyDAO.updateCompany(company);
+  try {
+    const company = new Company(requestObject);
+    return companyDAO.updateCompany(company);
+  } catch (err: any) {
+    return {
+      success: false,
+      apiCalled: false,
+      message: err.message
+    }
+  }
 }
 
 const removeCompany = (company_id: string) => {
