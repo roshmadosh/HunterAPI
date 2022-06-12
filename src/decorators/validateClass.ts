@@ -8,7 +8,11 @@ export const validate = function(target: any, memberName: string) {
   const fieldKey = `_${memberName}`;
   const validators = Reflect.getOwnMetadata('validators', target, memberName);
   const composite = (newValue: any) => {
-    return validators.reduce((prev: any, curr: (arg: any) => any) => curr(prev), newValue); 
+    // if parameter not provided, check if it's required
+    if (newValue == undefined) {
+      return validators.required(newValue);
+    }
+    return Object.entries(validators).map((entry: any) => entry[1]).reduce((prev: any, curr: (arg: any) => any) => curr(prev), newValue); 
   }
   Object.defineProperty(target, memberName, {
     set: function(newValue: any) {

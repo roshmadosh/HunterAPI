@@ -1,13 +1,15 @@
 import { stringLength, required, validate } from '../decorators';
 import { validateClass } from '../decorators/validateClass';
+
+
 export interface ICompany {
   company_id?: string,
   industry_name: string,
   company_name: string
-}
+};
 
 @validateClass
-export class Company {
+export class Company implements ICompany{
   company_id: string | undefined;
   
   @validate @required

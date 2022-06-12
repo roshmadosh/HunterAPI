@@ -8,8 +8,7 @@ const getCompanies = async (): Promise<ReturnObject<Company>> => {
       ...result,
       data: result.data.map((company: ICompany) => new Company(company)),
     };
-  }
-  return result;
+  } return result;
 }
 
 const getCompanyById = async (company_id:string): Promise<ReturnObject<Company>> => {
@@ -22,8 +21,7 @@ const getCompanyById = async (company_id:string): Promise<ReturnObject<Company>>
       ...result,
       data: result.data.map((company: ICompany) => new Company(company)),
     }
-  } 
-  return {
+  } return {
     success: false,
     apiCalled: true,
     message: result.message || 'company_id not found.'

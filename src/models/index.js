@@ -1,6 +1,7 @@
 const _MODELS = [
   'industries',
   'companies',
+  'appusers'
   // 'jobs'
 ];
 

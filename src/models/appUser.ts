@@ -1,30 +1,39 @@
-export class AppUser {
+import { validateClass, validate, required, stringLength } from "../decorators";
 
-  constructor(
-    private _username: string,
-    private _email: string,
-    private _password: string,
-    private _first_name: string,
-    private _last_name: string, 
-    private _company_id = 0
-  ) {}
+export interface IAppUser {
+  username: string,
+  email: string,
+  password: string,
+  first_name: string,
+  last_name: string,
+  company_id?: string;
+}
 
-  public get username() {
-    return this._username;
-  }
-  public get email() {
-    return this._email;
-  }
-  public get password() {
-    return this._password;
-  }
-  public get first_name() {
-    return this._first_name;
-  }
-  public get last_name() {
-    return this._last_name;
-  }
-  public get company_id() {
-    return this._company_id;
+@validateClass
+export class AppUser implements IAppUser {
+  @validate @required @stringLength({ min: 0, max: 30 })
+  username: string;
+
+  @validate @required @stringLength({ min: 0, max: 254 })
+  email: string;
+
+  @validate @required @stringLength({ min: 0, max: 30 })
+  password: string;
+
+  @validate @required @stringLength({ min: 0, max: 30 })
+  first_name: string;
+
+  @validate @required @stringLength({ min: 0, max: 30 })
+  last_name: string;
+
+  company_id: string | undefined;
+
+  constructor({ ...appUser }: IAppUser) {
+    this.username = appUser.username;
+    this. email = appUser.email;
+    this.password = appUser.password;
+    this.first_name = appUser.first_name;
+    this.last_name = appUser.last_name;
+    this.company_id = appUser.company_id
   }
 }

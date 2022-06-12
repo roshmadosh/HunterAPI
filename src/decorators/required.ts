@@ -2,7 +2,7 @@ import "reflect-metadata";
 
 export const required = (target: any, memberName: string) => {
   if (!Reflect.hasOwnMetadata('validators', target, memberName)) {
-    Reflect.defineMetadata('validators', [], target, memberName);
+    Reflect.defineMetadata('validators', {}, target, memberName);
   } 
   let validators = Reflect.getOwnMetadata('validators', target, memberName);
   const rule = (newValue: any) => {
@@ -14,6 +14,6 @@ export const required = (target: any, memberName: string) => {
     }
     return newValue;
   };
-  validators.push(rule);
+  Object.assign(validators, { required: rule })
   Reflect.defineMetadata('validators', validators, target, memberName);
 }
