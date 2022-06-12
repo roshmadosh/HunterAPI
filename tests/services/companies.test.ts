@@ -5,14 +5,6 @@ import { ICompany } from '../../src/models/company'
 
 let app: Express;
 
-const getCompanies = jest.fn(() => {
-  return {
-    success: true,
-    apiCalled: true,
-    data: []
-  }
-});
-
 const addCompany = jest.fn((requestBody: ICompany) => {
   return {
     success: true,
@@ -22,7 +14,6 @@ const addCompany = jest.fn((requestBody: ICompany) => {
 })
 
 app = createApp({
-  getCompanies,
   addCompany
 });
 

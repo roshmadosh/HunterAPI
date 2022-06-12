@@ -14,7 +14,7 @@ const getIndustries = async (): Promise<ReturnObject<Industry>> => {
 
 const addIndustry = (industry_name: string): Promise<ReturnObject<Industry>>=> {
   return runQuery({
-    text: 'INSERT INTO industry(industry_name) VALUES($1)',
+    text: 'INSERT INTO industry(industry_name) VALUES($1) RETURNING *',
     values: [industry_name]
   });
 };

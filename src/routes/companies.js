@@ -47,6 +47,17 @@ function createRouter(dataAccessor) {
     }
   })
 
+  router.delete('/:id', async (req, res) => {
+    const { id: company_id } = req.params;
+    const resObject = await services(dataAccessor).removeCompany(company_id);
+
+    if (!resObject.success) {
+      res.status(400).send(resObject);
+    } else {
+      res.status(200).send(resObject);
+    }
+  })
+
   return router;
 }
 
