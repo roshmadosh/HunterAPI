@@ -58,23 +58,19 @@ const updateAppUser = async (appUser: IAppUser): Promise<ReturnObject<AppUser>> 
   }
 }
 
-const checkExists= async (appUser: IAppUser): Promise<ReturnObject<AppUser>> => {
-  const { email } = appUser;
-  const duplicate = await runQuery({
-    text: 'SELECT * FROM appUser WHERE email = $1',
-    values: [email]
+const removeAppUser = async (username: string): Promise<ReturnObject<AppUser>> => {
+  const result = await runQuery({
+    text: 'DELETE FROM appUser WHERE username = $1 RETURNING *',
+    values: [username]
   });
-  if (duplicate.data[0]) {
-    return {
-      success: false,
-      apiCalled: true,
-      message: 'An account with that email already exists.'
-    }
-  } else {
-    return {
-      success: true,
-      apiCalled: true
-    }
+
+  if (result.data?.length > 0) {
+    return result;
+  }
+  return {
+    success: false,
+    apiCalled: true,
+    message: result.message || 'Username not found.'
   }
 }
 
@@ -97,4 +93,5 @@ export default {
   addAppUser,
   validatePassword,
   updateAppUser,
+  removeAppUser,
 }

@@ -26,7 +26,7 @@ function createRouter(dataAccessor) {
     } else {
       res.status(200).send(resObject);
     }
-  })
+  });
 
   router.post('/', async (req, res) => {
     const resObject = await services(dataAccessor).addAppUser(req.body);
@@ -36,7 +36,7 @@ function createRouter(dataAccessor) {
     } else {
       res.status(201).send(resObject);
     }
-  })
+  });
 
   router.put('/', async (req, res) => {
     const requestObject = {
@@ -50,7 +50,18 @@ function createRouter(dataAccessor) {
     } else {
       res.status(200).send(resObject);
     }
-  })
+  });
+
+  router.delete('/', async (req, res) => {
+    const resObject = await services(dataAccessor).removeAppUser(req.query.username);
+
+    if (!resObject.success) {
+      res.status(400).send(resObject);
+    } else {
+      res.status(200).send(resObject);
+    }
+  });
+
   return router;
 }
 

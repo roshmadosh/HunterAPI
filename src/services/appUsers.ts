@@ -13,10 +13,6 @@ function AppUserServices(database: any) {
     return DAO.getAppUserByIdentifier({ column: 'username', value: username});
   }
 
-  const getAppUserByEmail = (requestBody: { email: string}) => {
-    return DAO.getAppUserByIdentifier({ column: 'email', value: requestBody.email });
-  }
-
   const addAppUser = (requestBody: any) => {
     try {
       const appUser = new AppUser(requestBody);
@@ -32,6 +28,7 @@ function AppUserServices(database: any) {
 
   const updateAppUser = async (requestObject: { username: string, email: string, first_name: string, last_name: string}) => {
     try {
+      // find user
       const queriedUser = await getAppUserByUsername({ username: requestObject.username });
       if (!queriedUser.data.length) {
         return {
@@ -39,14 +36,16 @@ function AppUserServices(database: any) {
           success: false,
         }
       }
+      // create an AppUser instance with updated details
       const updatedUser = new AppUser({
         ...queriedUser.data[0],
         email: requestObject.email,
         first_name: requestObject.first_name,
         last_name: requestObject.last_name,
       });
+
       return DAO.updateAppUser(updatedUser);
-    } catch (err: any) {
+    } catch (err: any) { // this will catch any validation errors from AppUser instantiation
       return {
         success: false,
         apiCalled: true,
@@ -54,12 +53,18 @@ function AppUserServices(database: any) {
       }
     }
   }
+
+  const removeAppUser = (username: string) => {
+    return DAO.removeAppUser(username);
+  }
+
   
   return {
     getAllUsers,
     getAppUserByUsername,
     addAppUser,
     updateAppUser,
+    removeAppUser
   }
 }
 
