@@ -1,5 +1,6 @@
 import { runQuery, ReturnObject } from '../setup';
 import { Company, ICompany } from '../../models/company';
+import { capitalizeFirstLetters } from '../../utils/capitalizeFirst';
 
 const getCompanies = async (): Promise<ReturnObject<Company>> => {
   const result = await runQuery({ text: 'SELECT * FROM company' });
@@ -24,7 +25,7 @@ const getCompanyById = async (company_id:string): Promise<ReturnObject<Company>>
   } return {
     success: false,
     apiCalled: true,
-    message: result.message || 'company_id not found.'
+    message: result.message || 'company_id not found.',
   }
 }
 
@@ -33,9 +34,10 @@ const addCompany = async (company: ICompany): Promise<ReturnObject<Company>> => 
   if(!exists.success) {
     return exists;
   }
+  const { industry_name, company_name } = company;
   const result = await runQuery({ 
     text: 'INSERT INTO company(industry_name, company_name) VALUES($1, $2) RETURNING *',
-    values: [company.industry_name, company.company_name]
+    values: [capitalizeFirstLetters(industry_name), capitalizeFirstLetters(company_name)]
   });
   const data = result.success ? new Company(result.data[0]) : undefined;
   return {
@@ -56,7 +58,7 @@ const updateCompany = async (company: ICompany): Promise<ReturnObject<Company>> 
 
   const result = await runQuery({
     text: 'UPDATE company SET industry_name = $1, company_name = $2 WHERE company_id = $3 RETURNING *',
-    values: [industry_name, company_name, company_id!] // validation occurs at the object-mapping level, i.e. company_id will always be non-null
+    values: [capitalizeFirstLetters(industry_name), capitalizeFirstLetters(company_name), company_id!] // validation occurs at the object-mapping level, i.e. company_id will always be non-null
   });
 
   if (result.data?.length > 0) {

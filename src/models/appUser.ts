@@ -17,7 +17,7 @@ export class AppUser implements IAppUser {
   @validate @required @stringLength({ min: 0, max: 254 })
   email: string;
 
-  @validate @required @stringLength({ min: 0, max: 30 })
+  @validate @required @stringLength({ min: 0, max: 72 })
   password: string;
 
   @validate @required @stringLength({ min: 0, max: 30 })
