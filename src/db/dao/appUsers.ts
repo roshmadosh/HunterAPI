@@ -78,20 +78,10 @@ const generateHash = (plainTextPassword: string, saltRounds: number) => {
   return bcrypt.hashSync(plainTextPassword, saltRounds);
 }
 
-const validatePassword = (plainTextPassword: string, hashedPassword: string) => {
-  const match = bcrypt.compare(plainTextPassword, hashedPassword);
-  if (!match) {
-    throw new Error('Incorrect password.');
-  } return {
-    success: true,
-    apiCalled: true
-  }
-}
 export default {
   getAllUsers,
   getAppUserByIdentifier,
   addAppUser,
-  validatePassword,
   updateAppUser,
   removeAppUser,
 }

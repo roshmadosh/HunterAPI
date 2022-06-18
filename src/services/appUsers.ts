@@ -1,7 +1,5 @@
-import { request } from 'http';
 import DAO from '../db';
 import { AppUser, IAppUser } from '../models/appUser';
-import { capitalizeFirstLetters } from '../utils/capitalizeFirst';
 
 function AppUserServices(database: any) {
   const getAllUsers = () => {
