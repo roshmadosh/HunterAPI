@@ -2,8 +2,14 @@ import { runQuery, ReturnObject } from '../setup';
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-
 const attemptLogin = async (credentials: { username: string, password: string }) => {
+  if (!credentials.username || !credentials.password) {
+    return {
+      success: false,
+      apiCalled: false,
+      message: 'Please provide a username and password.'
+    }
+  }
   const result = await runQuery({
     text: `SELECT * FROM appuser WHERE username = $1`,
     values: [credentials.username],
