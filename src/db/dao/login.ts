@@ -2,7 +2,7 @@ import { runQuery, ReturnObject } from '../setup';
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const attemptLogin = async (credentials: { username: string, password: string }) => {
+const attemptLogin = async (credentials: { username: string, password: string, rememberMe?: boolean }) => {
   if (!credentials.username || !credentials.password) {
     return {
       success: false,
@@ -29,7 +29,7 @@ const attemptLogin = async (credentials: { username: string, password: string })
       { username: credentials.username }, 
       process.env.JWT_SECRET, 
       {
-        expiresIn: process.env.JWT_EXPIRES_IN
+       ...(credentials.rememberMe && { expiresIn: parseInt(process.env.JWT_EXPIRES_IN!)})
       });
     return {
       success: true,
