@@ -1,21 +1,29 @@
 const jwt = require('jsonwebtoken');
+const services = require('../services');
 
 module.exports = (req, res, next) => {
   const { token } = req.cookies;
   if (!token) {
     req.user = undefined;
-    next();
+    res.status(403).send({
+      success: false,
+      apiCalled: false,
+      message: 'Authentication failed. No cookie present.'
+    });
+    return;
   }
 
   jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
     if (err) {
       req.user = undefined;
-      console.error(err);
-      next();
+      res.status(500).send({
+        success: false,
+        apiCalled: false,
+        message: 'Cookie found but something went wrong during JWT verification.'
+      });
+      return;
     }
-    console.log(decoded);
+    req.username = decoded.username;
+    next();
   });
-
-
-  next();
 }

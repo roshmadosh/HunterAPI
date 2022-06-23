@@ -39,23 +39,27 @@ function createRouter(dataAccessor) {
   })
 
   router.use(authenticateUser);
-  router.get('/', (req, res) => {
-    if (!req.user) {
-      res.send({
+  router.get('/', async (req, res) => {
+    if (!req.username) {
+      return res.status(400).send({
         success: false,
-        apiCalled: true,
-        message: 'User authentication failed.'
+        apiCalled: false,
+        message: 'Token verification failed.'
       });
+    } 
+
+    const respObj = await services(dataAccessor).getAppUserByUsername({ username: req.username });
+
+    if (!respObj.success) {
+      return res.status(403).send(respObj);
     } else {
-      res.send({
+      return res.status(200).send({
         success: true,
         apiCalled: true,
-        data: req.user
-      })
+        data: respObj.data
+      });
     }
   })
-
-
   return router;
 }
 

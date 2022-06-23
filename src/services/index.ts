@@ -3,7 +3,7 @@ import industryServices from './industries';
 import appUserServices from './appUsers';
 import loginServices from './login';
 
-module.exports = function useDatabase(database: any) {
+module.exports = function useDatabase(database?: any) {
   return {
     ...companyServices(database),
     ...industryServices(database),
